@@ -1,43 +1,48 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
+import { authActions } from "../../actions";
 
 export default function Header() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const innerRef = useOuterClick(hide);
 
   const { user } = useSelector(state => state.auth);
+  const [isVisible, setVisibility] = useState(false);
+
+  function show() {
+    setVisibility(true);
+  }
+  function hide() {
+    setVisibility(false);
+  }
+  function logout() {
+    dispatch(authActions.logout(history));
+  }
 
   return (
     <>
-      <nav class="navbar navbar-expand-xl navbar-dark bg-dark pmd-navbar pmd-z-depth fixed-top">
-        <a class="navbar-brand" href="#">
+      <nav className="navbar navbar-dark bg-dark fixed-top">
+        <a className="navbar-brand" href="#">
           Navbar
         </a>
-        <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
-          <a
-            href="javascript:void(0);"
-            class="btn-user dropdown-toggle media align-items-center"
-            data-toggle="dropdown"
-            data-sidebar="true"
-            aria-expanded="false"
-          >
-            <img
-              class="mr-2"
-              src="https://pro.propeller.in/assets/images/avatar-icon-40x40.png"
-              width="40"
-              height="40"
-              alt="avatar"
-            />
-            <div class="media-body">{user.name.first}</div>
-            <i class="material-icons md-light ml-2 pmd-sm">more_vert</i>
+        <div className="mr-auto" />
+        <div ref={innerRef}>
+          <a href="javascript:void(0);" onClick={show}>
+            <div>{user?.name?.first}</div>
           </a>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            <a class="dropdown-item" href="javascript:void(0);">
-              Edit Profile
+          <ul
+            className={
+              "dropdown-menu dropdown-menu-right " + (isVisible ? "show" : "")
+            }
+          >
+            <a className="dropdown-item" href="javascript:void(0);">
+              <Link to="/register">Edit Profile</Link>
             </a>
-            <a class="dropdown-item" href="javascript:void(0);">
+            <a className="dropdown-item" onClick={logout}>
               Logout
             </a>
           </ul>
@@ -45,4 +50,28 @@ export default function Header() {
       </nav>
     </>
   );
+}
+
+function useOuterClick(callback) {
+  const callbackRef = useRef(); // initialize mutable callback ref
+  const innerRef = useRef(); // returned to client, who sets the "border" element
+
+  // update callback on each render, so second useEffect has most recent callback
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
+  useEffect(() => {
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+    function handleClick(e) {
+      if (
+        innerRef.current &&
+        callbackRef.current &&
+        !innerRef.current.contains(e.target)
+      )
+        callbackRef.current(e);
+    }
+  }, []); // no dependencies -> stable click listener
+
+  return innerRef; // convenience for client (doesn't need to init ref himself)
 }

@@ -1,3 +1,4 @@
 import App from "./App";
+import Route from "./Rout";
 
-export { App };
+export { App, Route };

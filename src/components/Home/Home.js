@@ -17,7 +17,6 @@ export default function Home() {
           <a onClick={() => dispatch(authActions.logout(history))}>Logout</a>
         </p>
       </div>
-      <Header />
     </>
   );
 }
