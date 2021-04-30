@@ -5,7 +5,7 @@ import { Home, Login, Register } from "../index";
 
 export default function AppRoute() {
   return (
-    <div style={{ paddingTop: "56px" }}>
+    <div style={{ paddingTop: "56px" }} className="pl-5 pr-5">
       <Switch>
         <PrivateRoute exact path="/" component={Home} />
         <HomeRout path="/login" component={Login} />

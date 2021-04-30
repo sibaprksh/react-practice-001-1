@@ -28,37 +28,34 @@ export default function Header() {
 
   return (
     <>
-      <nav className="navbar navbar-dark bg-dark fixed-top">
+      <nav className="navbar navbar-dark bg-dark fixed-top pl-5 pr-5">
         <a className="navbar-brand" href="#">
           Navbar
         </a>
         <div className="mr-auto" />
-        {user && Object.keys(user).length ? authTemplate() : null}
+        {user && Object.keys(user).length ? (
+          <div ref={innerRef}>
+            <a className="navbar-text" onClick={show}>
+              {user?.name?.first}
+            </a>
+            <ul
+              className={
+                "dropdown-menu dropdown-menu-right mr-5 " +
+                (isVisible ? "show" : "")
+              }
+            >
+              <Link className="dropdown-item" to="/register">
+                Edit Profile
+              </Link>
+              <a className="dropdown-item" onClick={logout}>
+                Logout
+              </a>
+            </ul>
+          </div>
+        ) : null}
       </nav>
     </>
   );
-
-  function authTemplate() {
-    return (
-      <div ref={innerRef}>
-        <a className="navbar-text" onClick={show}>
-          {user?.name?.first}
-        </a>
-        <ul
-          className={
-            "dropdown-menu dropdown-menu-right " + (isVisible ? "show" : "")
-          }
-        >
-          <a className="dropdown-item">
-            <Link to="/register">Edit Profile</Link>
-          </a>
-          <a className="dropdown-item" onClick={logout}>
-            Logout
-          </a>
-        </ul>
-      </div>
-    );
-  }
 }
 
 function useOuterClick(callback) {
