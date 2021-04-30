@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { authActions } from "../../actions";
@@ -8,10 +8,13 @@ import { authActions } from "../../actions";
 export default function Header() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const innerRef = useOuterClick(hide);
 
   const { user } = useSelector(state => state.auth);
   const [isVisible, setVisibility] = useState(false);
+
+  useEffect(hide, [location]);
 
   function show() {
     setVisibility(true);
@@ -30,26 +33,32 @@ export default function Header() {
           Navbar
         </a>
         <div className="mr-auto" />
-        <div ref={innerRef}>
-          <a href="javascript:void(0);" onClick={show}>
-            <div>{user?.name?.first}</div>
-          </a>
-          <ul
-            className={
-              "dropdown-menu dropdown-menu-right " + (isVisible ? "show" : "")
-            }
-          >
-            <a className="dropdown-item" href="javascript:void(0);">
-              <Link to="/register">Edit Profile</Link>
-            </a>
-            <a className="dropdown-item" onClick={logout}>
-              Logout
-            </a>
-          </ul>
-        </div>
+        {user && Object.keys(user).length ? authTemplate() : null}
       </nav>
     </>
   );
+
+  function authTemplate() {
+    return (
+      <div ref={innerRef}>
+        <a className="navbar-text" onClick={show}>
+          {user?.name?.first}
+        </a>
+        <ul
+          className={
+            "dropdown-menu dropdown-menu-right " + (isVisible ? "show" : "")
+          }
+        >
+          <a className="dropdown-item">
+            <Link to="/register">Edit Profile</Link>
+          </a>
+          <a className="dropdown-item" onClick={logout}>
+            Logout
+          </a>
+        </ul>
+      </div>
+    );
+  }
 }
 
 function useOuterClick(callback) {

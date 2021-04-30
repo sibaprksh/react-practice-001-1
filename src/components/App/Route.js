@@ -3,14 +3,16 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import { Home, Login, Register } from "../index";
 
-export default function AppRout() {
+export default function AppRoute() {
   return (
-    <Switch>
-      <PrivateRoute exact path="/" component={Home} />
-      <HomeRout path="/login" component={Login} />
-      <HomeRout path="/register" component={Register} />
-      <Redirect from="*" to="/" />
-    </Switch>
+    <div style={{ paddingTop: "56px" }}>
+      <Switch>
+        <PrivateRoute exact path="/" component={Home} />
+        <HomeRout path="/login" component={Login} />
+        <HomeRout path="/register" component={Register} />
+        <Redirect from="*" to="/" />
+      </Switch>
+    </div>
   );
 }
 

@@ -30,6 +30,5 @@ ReactDOM.render(
  
  TODO:
   1. All static messages move to action - done
-  2. Home Page  
-
+  2. nav, router, alert separated from app - done
 */
