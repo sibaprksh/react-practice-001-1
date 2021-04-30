@@ -4,15 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { authActions } from "../../actions";
 
+import { Header } from "../";
+
 export default function Home() {
   const dispatch = useDispatch();
   const history = useHistory();
   return (
-    <div>
-      <h1> Home !! </h1>
-      <p>
-        <a onClick={() => dispatch(authActions.logout(history))}>Logout</a>
-      </p>
-    </div>
+    <>
+      <div>
+        <h1> Home !! </h1>
+        <p>
+          <a onClick={() => dispatch(authActions.logout(history))}>Logout</a>
+        </p>
+      </div>
+      <Header />
+    </>
   );
 }
